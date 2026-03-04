@@ -1048,10 +1048,6 @@ body.menu-open {
   color: #fff;
 }
 
-.integration-icon {
-  height: 28px !important;
-  width: 27px !important;
-}
 
 /* ============================================
    Industries Section
@@ -3149,6 +3145,9 @@ body.menu-open {
   background: #fff;
   color: #111317;
   border-color: #fff;
+}
+.resource-card-btn svg {
+  width: 30px;
 }
 
 .resource-card-btn svg path,

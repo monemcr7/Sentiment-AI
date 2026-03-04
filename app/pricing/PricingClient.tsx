@@ -53,15 +53,9 @@ export default function PricingClient({ data }: { data: PricingPageData }) {
                     <li key={feature}>{checkIcon} {feature}</li>
                   ))}
                 </ul>
-                {plan.button.url.startsWith('/') ? (
-                  <Link href={plan.button.url} className={`pricing-card-btn${plan.isFeatured ? ' pricing-card-btn--primary' : ''}`}>
-                    {plan.button.title}
-                  </Link>
-                ) : (
-                  <a href={plan.button.url} className={`pricing-card-btn${plan.isFeatured ? ' pricing-card-btn--primary' : ''}`}>
-                    {plan.button.title}
-                  </a>
-                )}
+                <Link href="/contact" className={`pricing-card-btn${plan.isFeatured ? ' pricing-card-btn--primary' : ''}`}>
+                  {plan.button.title}
+                </Link>
               </div>
             ))}
           </div>
@@ -78,7 +72,7 @@ export default function PricingClient({ data }: { data: PricingPageData }) {
       <CTASection
         title={titleWithBreaks(data.cta.title)}
         buttonText={data.cta.button.title}
-        buttonHref={data.cta.button.url}
+        buttonHref="/contact"
         className="product-cta"
       />
     </main>

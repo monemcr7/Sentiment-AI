@@ -75,10 +75,10 @@ export default function HomeClient({ data }: { data: HomePageData }) {
                 {data.hero.primaryCTA.title}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </Link>
-              <a href={data.hero.secondaryCTA.url} className="btn btn-dark">
+              <Link href="/contact" className="btn btn-dark">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 {data.hero.secondaryCTA.title}
-              </a>
+              </Link>
             </div>
           </div>
           <div className="hero-right">
@@ -164,7 +164,7 @@ export default function HomeClient({ data }: { data: HomePageData }) {
           <div className="steps">
             {data.howItWorks.steps.map((step) => (
               <div key={step.number} className="step">
-                <span className="step-number">/ {step.number}</span>
+                <span className="step-number">{step.number}</span>
                 <div className="step-content">
                   <h3>{step.title}</h3>
                   <p>{step.description}</p>
@@ -210,10 +210,10 @@ export default function HomeClient({ data }: { data: HomePageData }) {
           <h2 className="section-title">{data.industries.title}</h2>
           <div className="industries-grid">
             {data.industries.cards.map((card) => (
-              <a key={card.name} href={card.link} className="industry-card">
+              <Link key={card.name} href="/industries" className="industry-card">
                 <span dangerouslySetInnerHTML={{ __html: card.icon }} />
                 <span>{card.name}</span>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
