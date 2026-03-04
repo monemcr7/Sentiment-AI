@@ -29,8 +29,29 @@ async function fetchAPI<T>(endpoint: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export function getHeaderFooter() {
-  return fetchAPI<HeaderFooterResponse>('header_footer_settings');
+const FALLBACK_HEADER_FOOTER: HeaderFooterResponse = {
+  header: {
+    logo: { url: '/assets/logo.svg', alt: 'Sentiment AI' },
+    navigation: [],
+    bookACall: { title: '', url: '' },
+    getInTouch: { title: '', url: '' },
+  },
+  footer: {
+    logo: { url: '/assets/logo.svg', alt: 'Sentiment AI' },
+    tagline: '',
+    columns: [],
+    copyright: '',
+    bottomLinks: [],
+  },
+};
+
+export async function getHeaderFooter() {
+  try {
+    return await fetchAPI<HeaderFooterResponse>('header_footer_settings');
+  } catch {
+    // Fallback for build-time when the WP API is unreachable (e.g. 403 from Vercel build servers)
+    return FALLBACK_HEADER_FOOTER;
+  }
 }
 
 export function getHomePage() {

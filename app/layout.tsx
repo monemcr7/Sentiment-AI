@@ -19,6 +19,9 @@ const inter = Inter({
   display: 'swap',
 });
 
+// Prevent static generation at build time — the WP API is not reachable from Vercel build servers
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: {
     default: 'Sentiment AI — Revenue Intelligence from Every Sales Call',
