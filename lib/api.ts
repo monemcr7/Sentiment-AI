@@ -19,6 +19,10 @@ const REVALIDATE = 60;
 
 async function fetchAPI<T>(endpoint: string): Promise<T> {
   const res = await fetch(`${API_BASE}/${endpoint}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Key': process.env.WORDPRESS_API_KEY ?? '',
+    },
     next: { revalidate: REVALIDATE },
   });
 

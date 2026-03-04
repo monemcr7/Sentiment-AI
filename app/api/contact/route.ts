@@ -21,7 +21,10 @@ export async function POST(request: NextRequest) {
 
     const res = await fetch(CONTACT_FORM_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': process.env.WORDPRESS_API_KEY ?? '',
+      },
       body: JSON.stringify(payload),
     });
 
