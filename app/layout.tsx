@@ -19,9 +19,6 @@ const inter = Inter({
   display: 'swap',
 });
 
-/** Skip static prerender at build; render on demand so API isn't called during Vercel build (avoids 403). */
-export const dynamic = 'force-dynamic';
-
 export const metadata: Metadata = {
   title: {
     default: 'Sentiment AI — Revenue Intelligence from Every Sales Call',
