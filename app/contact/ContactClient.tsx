@@ -5,13 +5,10 @@ import { useScrollAnimations } from '@/hooks/useScrollAnimation';
 import ProductHero from '@/components/ProductHero';
 import type { ContactPageData } from '@/lib/types';
 
+const CONTACT_FORM_URL = 'https://sentimentai.nexatestwp.com/wp-json/custom/v1/contact-form';
+
 const defaults = { opacity: 0, y: 40, duration: 0.7, ease: 'power2.out' };
 const stagger = { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out', stagger: 0.12 };
-
-function extractFormId(html: string): string {
-  const match = html.match(/name="_wpcf7"\s+value="(\d+)"/);
-  return match ? match[1] : '';
-}
 
 export default function ContactClient({ data }: { data: ContactPageData }) {
   const [form, setForm] = useState({
@@ -24,8 +21,6 @@ export default function ContactClient({ data }: { data: ContactPageData }) {
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [statusMessage, setStatusMessage] = useState('');
-
-  const formId = useMemo(() => extractFormId(data.form.renderedHtml), [data.form.renderedHtml]);
 
   const animations = useMemo(() => [
     { selector: '.product-hero .section-label', from: defaults, delay: 0.2 },
@@ -45,27 +40,34 @@ export default function ContactClient({ data }: { data: ContactPageData }) {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus('loading');
+    setStatusMessage('');
 
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(CONTACT_FORM_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          formId,
-          fields: {
-            'full-name': form.fullName,
-            'company': form.company,
-            'role': form.role,
-            'your-email': form.email,
-            'phone': form.phone,
-            'your-message': form.message,
-          },
+          'full-name': form.fullName,
+          company: form.company,
+          role: form.role,
+          'your-email': form.email,
+          phone: form.phone,
+          'your-message': form.message,
         }),
       });
 
-      const result = await res.json();
+      let result: { status?: string; success?: boolean; message?: string } = {};
+      try {
+        result = await res.json();
+      } catch {
+        setStatus('error');
+        setStatusMessage('Invalid response from server. Please try again.');
+        return;
+      }
 
-      if (result.status === 'mail_sent') {
+      const success = result.status === 'mail_sent' || result.success === true;
+
+      if (success) {
         setStatus('success');
         setStatusMessage(result.message || 'Thank you! Your message has been sent.');
         setForm({ fullName: '', company: '', role: '', email: '', phone: '', message: '' });

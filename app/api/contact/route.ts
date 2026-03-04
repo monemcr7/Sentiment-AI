@@ -1,34 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CF7_BASE = 'https://sentimentai.nexatestwp.com/wp-json/contact-form-7/v1/contact-forms';
+const CONTACT_FORM_URL = 'https://sentimentai.nexatestwp.com/wp-json/custom/v1/contact-form';
+
+const FORM_FIELDS = ['full-name', 'company', 'role', 'your-email', 'phone', 'your-message'] as const;
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { formId, fields } = body;
+    const fields = body?.fields ?? body;
 
-    if (!formId || !fields) {
+    if (!fields || typeof fields !== 'object') {
       return NextResponse.json({ status: 'error', message: 'Missing form data' }, { status: 400 });
     }
 
-    const formData = new FormData();
-    formData.append('_wpcf7', String(formId));
-    formData.append('_wpcf7_version', '6.1.5');
-    formData.append('_wpcf7_locale', 'en_US');
-    formData.append('_wpcf7_unit_tag', `wpcf7-f${formId}-o1`);
-
-    for (const [key, value] of Object.entries(fields)) {
-      formData.append(key, value as string);
+    const payload: Record<string, string> = {};
+    for (const key of FORM_FIELDS) {
+      const value = fields[key];
+      payload[key] = typeof value === 'string' ? value : '';
     }
 
-    const res = await fetch(`${CF7_BASE}/${formId}/feedback`, {
+    const res = await fetch(CONTACT_FORM_URL, {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
 
-    const data = await res.json();
+    const text = await res.text();
+    let data: { status?: string; success?: boolean; message?: string } = {};
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch {
+      data = { message: res.ok ? undefined : 'Submission failed' };
+    }
+
+    if (!res.ok) {
+      const message = data?.message || 'Submission failed';
+      return NextResponse.json({ status: 'error', message }, { status: 200 });
+    }
     return NextResponse.json(data);
-  } catch {
-    return NextResponse.json({ status: 'error', message: 'Submission failed' }, { status: 500 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Submission failed';
+    return NextResponse.json({ status: 'error', message }, { status: 200 });
   }
 }

@@ -17,6 +17,23 @@ const API_BASE = 'https://sentimentai.nexatestwp.com/wp-json/custom/v1';
 
 const REVALIDATE = 60;
 
+/** Fallback when header_footer API is unreachable (e.g. 403 during Vercel build). */
+const HEADER_FOOTER_FALLBACK: HeaderFooterResponse = {
+  header: {
+    logo: { url: '/assets/logo.png', alt: 'Sentiment AI' },
+    navigation: [],
+    bookACall: { url: '/contact', title: 'Book a call' },
+    getInTouch: { url: '/contact', title: 'Get in touch' },
+  },
+  footer: {
+    logo: { url: '/assets/logo.png', alt: 'Sentiment AI' },
+    tagline: '',
+    columns: [],
+    copyright: `© ${new Date().getFullYear()} Sentiment AI. All rights reserved.`,
+    bottomLinks: [],
+  },
+};
+
 async function fetchAPI<T>(endpoint: string): Promise<T> {
   const res = await fetch(`${API_BASE}/${endpoint}`, {
     next: { revalidate: REVALIDATE },
@@ -29,8 +46,13 @@ async function fetchAPI<T>(endpoint: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export function getHeaderFooter() {
-  return fetchAPI<HeaderFooterResponse>('header_footer_settings');
+/** Fetches header/footer; on 403 or other failure returns fallback so build (e.g. Vercel) can succeed. */
+export async function getHeaderFooter(): Promise<HeaderFooterResponse> {
+  try {
+    return await fetchAPI<HeaderFooterResponse>('header_footer_settings');
+  } catch {
+    return HEADER_FOOTER_FALLBACK;
+  }
 }
 
 export function getHomePage() {
