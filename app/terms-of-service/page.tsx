@@ -1,8 +1,14 @@
+import { getLegalPage } from '@/lib/api';
 import TermsOfServiceClient from './TermsOfServiceClient';
 import { dummyTermsData } from './dummyTermsData';
 
-// Use dummy data until the legal/terms-of-service API is ready.
-// When ready: fetch with getLegalPage('terms-of-service') and use API data when it has content.
-export default function TermsOfServicePage() {
-  return <TermsOfServiceClient data={dummyTermsData} />;
+export default async function TermsOfServicePage() {
+  let data;
+  try {
+    data = await getLegalPage('terms-of-service');
+    if (!data?.content && !data?.hero?.title) data = dummyTermsData;
+  } catch {
+    data = dummyTermsData;
+  }
+  return <TermsOfServiceClient data={data} />;
 }
