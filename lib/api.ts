@@ -22,6 +22,8 @@ async function fetchAPI<T>(endpoint: string): Promise<T> {
     headers: {
       'Content-Type': 'application/json',
       'X-API-Key': process.env.WORDPRESS_API_KEY ?? '',
+      'Origin': 'https://sentiment-ai-nextjs.vercel.app',
+      'Referer': 'https://sentiment-ai-nextjs.vercel.app/',
     },
     next: { revalidate: REVALIDATE },
   });
