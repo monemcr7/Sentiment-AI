@@ -139,7 +139,10 @@ export default function HomeClient({ data }: { data: HomePageData }) {
       {/* Our Methods Section */}
       <section className="methods">
         <div className="methods-bg">
-          <img src="/assets/blue-glow.png" alt="" />
+          <img src="/assets/blue-glow.png" alt="image" />
+        </div>
+        <div className="methods-shape">
+          <img src="/assets/bg-shape.png" alt="image" />
         </div>
         <div className="section-container">
           <SectionLabel text={data.methods.label} />
@@ -203,7 +206,7 @@ export default function HomeClient({ data }: { data: HomePageData }) {
       {/* Industries Section */}
       <section className="industries" id="industries">
         <div className="industries-bg">
-          <img src="/assets/blue-glow.png" alt="" />
+          <img src="/assets/image-4.png" alt="" />
         </div>
         <div className="industries-content">
           <SectionLabel text={data.industries.label} />
