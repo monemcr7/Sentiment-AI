@@ -37,13 +37,13 @@ async function fetchAPI<T>(endpoint: string): Promise<T> {
 
 const FALLBACK_HEADER_FOOTER: HeaderFooterResponse = {
   header: {
-    logo: { url: '/assets/logo.png', alt: 'Sentiment AI' },
+    logo: { url: '/assets/logo.svg', alt: 'Sentiment AI' },
     navigation: [],
     bookACall: { title: '', url: '' },
     getInTouch: { title: '', url: '' },
   },
   footer: {
-    logo: { url: '/assets/logo.png', alt: 'Sentiment AI' },
+    logo: { url: '/assets/logo.svg', alt: 'Sentiment AI' },
     tagline: '',
     columns: [],
     copyright: '',
